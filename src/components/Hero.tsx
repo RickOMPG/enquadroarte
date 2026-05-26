@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import logo from '../img/white-label.png'
 
 function Hero() {
   return (
@@ -14,6 +15,15 @@ function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
 
       <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+        <motion.img
+          src={logo}
+          alt="Enquadro Arte"
+          className="mb-8 h-16 w-auto sm:h-20 md:h-24"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+        />
+
         <motion.h1
           className="font-serif text-4xl leading-tight text-white sm:text-5xl md:text-6xl lg:text-7xl"
           initial={{ opacity: 0, y: 30 }}

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { MessageCircle, Mail, MapPin } from 'lucide-react'
+import logo from '../img/white-label.png'
 
 function InstagramIcon({ className }: { className?: string }) {
   return (
@@ -53,8 +54,12 @@ function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h3 className="font-serif text-2xl text-white">Enquadro Arte</h3>
-            <p className="mt-3 text-sm leading-relaxed text-brand-400">
+            <img
+              src={logo}
+              alt="Enquadro Arte"
+              className="h-10 w-auto"
+            />
+            <p className="mt-4 text-sm leading-relaxed text-brand-400">
               Curadoria de arte e emolduramento artesanal sob medida.
               Transforme seus ambientes com peças exclusivas.
             </p>
