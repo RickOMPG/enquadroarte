@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import aboutImg from '../img/OOnL6T0.png'
+import aboutImg from '../img/store-picture.jpg'
 
 function About() {
   return (

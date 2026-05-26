@@ -1,5 +1,6 @@
+import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import img1 from '../img/ZkaKWyQ.jpeg'
 import img2 from '../img/pLbJV2P.jpeg'
 import img3 from '../img/OOnL6T0.png'
@@ -29,6 +30,96 @@ const itemVariants = {
   visible: { opacity: 1, y: 0 },
 }
 
+function MobileCarousel() {
+  const [current, setCurrent] = useState(0)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const imagesRef = useRef<(HTMLDivElement | null)[]>([])
+
+  useEffect(() => {
+    const el = scrollRef.current
+    if (!el) return
+
+    const onScroll = () => {
+      const cardWidth = el.querySelector('div')?.clientWidth ?? el.clientWidth
+      const idx = Math.round(el.scrollLeft / cardWidth)
+      if (idx !== current) setCurrent(idx)
+    }
+
+    el.addEventListener('scroll', onScroll, { passive: true })
+    return () => el.removeEventListener('scroll', onScroll)
+  }, [current])
+
+  const scrollTo = (index: number) => {
+    const el = scrollRef.current
+    if (!el) return
+    const cardWidth = (el.querySelector('div')?.clientWidth ?? el.clientWidth)
+    el.scrollTo({ left: index * cardWidth, behavior: 'smooth' })
+  }
+
+  return (
+    <div className="relative">
+      <div
+        ref={scrollRef}
+        className="flex snap-x snap-mandatory -mx-4 gap-3 overflow-x-auto px-4 scrollbar-hide"
+      >
+        {images.map((image, i) => (
+          <div
+            key={image.src}
+            ref={(el) => { imagesRef.current[i] = el }}
+            className="w-[82%] shrink-0 snap-center overflow-hidden rounded-sm first:ml-0 last:mr-0"
+          >
+            <div className="relative aspect-[4/5]">
+              <img
+                src={image.src}
+                alt={image.alt}
+                className="absolute inset-0 h-full w-full object-cover"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 flex cursor-pointer items-end justify-center bg-gradient-to-t from-black/40 to-transparent p-6 transition-colors hover:bg-black/30">
+                <a
+                  href="#contato"
+                  className="flex items-center gap-2 border border-white px-6 py-2 text-xs tracking-widest text-white uppercase backdrop-blur-sm"
+                >
+                  Quero este estilo
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </a>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <button
+        onClick={() => scrollTo(current - 1)}
+        className="absolute left-1 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-1.5 text-brand-800 shadow-sm backdrop-blur-sm transition-colors hover:bg-white"
+        aria-label="Anterior"
+      >
+        <ChevronLeft className="h-4 w-4" />
+      </button>
+      <button
+        onClick={() => scrollTo(current + 1)}
+        className="absolute right-1 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-1.5 text-brand-800 shadow-sm backdrop-blur-sm transition-colors hover:bg-white"
+        aria-label="Próximo"
+      >
+        <ChevronRight className="h-4 w-4" />
+      </button>
+
+      <div className="mt-4 flex items-center justify-center gap-2">
+        {images.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => scrollTo(i)}
+            className={`h-1.5 rounded-full transition-all ${
+              i === current ? 'w-6 bg-brand-800' : 'w-1.5 bg-brand-300'
+            }`}
+            aria-label={`Imagem ${i + 1}`}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function Gallery() {
   return (
     <section className="bg-brand-50 px-6 py-24 sm:px-8 lg:px-16" id="galeria">
@@ -48,8 +139,12 @@ function Gallery() {
           </p>
         </motion.div>
 
+        <div className="block sm:hidden">
+          <MobileCarousel />
+        </div>
+
         <motion.div
-          className="columns-2 gap-4 md:columns-3 lg:gap-6"
+          className="hidden sm:block sm:columns-2 md:columns-3 lg:gap-6"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
